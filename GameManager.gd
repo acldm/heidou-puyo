@@ -47,6 +47,8 @@ func droping(delta):
 				block.hor_move(go_dir)
 
 	for block in running_blocks:
+		if go_dir != 0:
+			block.hor_move(go_dir)
 		var done = block.step(delta)
 		if done == false:
 			alldone = false
