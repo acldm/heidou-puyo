@@ -1,3 +1,4 @@
+class_name Block
 extends Node2D
 
 signal block_added
@@ -13,6 +14,7 @@ var to_target_done = true
 var to_target_x_done = true
 var x_speed = 0
 var is_stop = false
+var is_left = false
 
 func _ready():
 	emit_signal("block_added", self)
@@ -28,22 +30,18 @@ func to_target(new_speed = 2):
 	if is_stop:
 		return
 		
-	if step_y >= GameManager.MAX_Y or GameManager.check(step_x, step_y + 1):
+	if GameManager.check(step_x, step_y + 1):
 		is_stop = true
 		return false
 	target_y = position.y + size
 	to_target_done = false
 
 func hor_move(dir):
-
 	if not to_target_x_done:
 		return
 
 	var target_step_x = step_x + dir
 	if (target_step_x == GameManager.MAX_X or target_step_x == 0) and GameManager.check(target_step_x, step_y) != null:
-		return
-
-	if target_step_x > GameManager.MAX_X or target_step_x < 0:
 		return
 
 	target_x = target_step_x * size
@@ -79,4 +77,3 @@ func step(delta):
 
 func is_stopped():
 	return is_stop
-

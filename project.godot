@@ -8,15 +8,37 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Block",
+"language": "GDScript",
+"path": "res://scripts/block.gd"
+}, {
+"base": "Reference",
+"class": "GameManager",
+"language": "GDScript",
+"path": "res://scripts/game_manager.gd"
+}, {
+"base": "Reference",
+"class": "RunningBlockGroup",
+"language": "GDScript",
+"path": "res://scripts/running_block_group.gd"
+} ]
+_global_script_class_icons={
+"Block": "",
+"GameManager": "",
+"RunningBlockGroup": ""
+}
+
 [application]
 
 config/name="Test"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://prefabs/Main.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-GameManager="*res://GameManager.gd"
+GameManager="*res://scripts/game_manager.gd"
 
 [display]
 
