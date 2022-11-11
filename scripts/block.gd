@@ -28,13 +28,15 @@ func init(x, y=0):
 func to_target(new_speed = 2):
 	speed = new_speed * size 
 	if is_stop:
-		return
+		return false
 		
+	print(step_x, '- -',step_y)
 	if GameManager.check(step_x, step_y + 1):
 		is_stop = true
 		return false
 	target_y = position.y + size
 	to_target_done = false
+	return not is_stop
 
 func hor_move(dir):
 	if not to_target_x_done:
