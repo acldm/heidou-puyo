@@ -9,15 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Reference",
+"base": "Node2D",
 "class": "Block",
 "language": "GDScript",
 "path": "res://scripts/block.gd"
-}, {
-"base": "Reference",
-"class": "GameManager",
-"language": "GDScript",
-"path": "res://scripts/game_manager.gd"
 }, {
 "base": "Reference",
 "class": "RunningBlockGroup",
@@ -26,7 +21,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Block": "",
-"GameManager": "",
 "RunningBlockGroup": ""
 }
 
