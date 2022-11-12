@@ -4,22 +4,17 @@ extends Node2D
 signal block_added
 
 export var size = 24 
-var speed = 2 
-var hor_speed = 8
 var target_x = 0
 var target_y = 0
 var step_y = 0
 var step_x = 0
-var to_target_done = true
-var to_target_x_done = true
-var x_speed = 0
 var is_stop = false
 var is_left = false
 
 func _ready():
 	emit_signal("block_added", self)
 
-func init(x, y=0):
+func init_pos(x, y=0):
 	step_x = x
 	step_y = y
 	position.x = x * size
@@ -29,61 +24,72 @@ func can_move(dir):
 	if is_stop:
 		return true
 
-	if GameManager.check(step_x + dir, step_y + 1)\
-		or not to_target_x_done:
+	var check_y = step_y + dy 
+	if move_cd < MoveCD\
+		or GameManager.check(step_x + dir, check_y) != null:
 		return false
 
-	var x_dist = 1.0 / hor_speed
-	var rest_y_dist = abs(target_y - position.y) / speed
-	if rest_y_dist < x_dist and GameManager.check(step_x + dir, step_y + 2) != null:
-		return false
-	
 	return true
 
 
+const MoveCD = 0.1
+var move_cd = 0
 func move(dir):
+	move_cd = 0
+
 	if is_stop:
 		return
-	target_x = (step_x + dir) * size
-	to_target_x_done = false
-	x_speed = dir * hor_speed * size
 
+	position.x += dir * size
+	step_x += dir
 
-func to_target(new_speed = 2):
-	speed = new_speed * size 
-	if is_stop:
+func uplogic(delta):
+	move_cd += delta
+
+func play_rotate_anim():
+	pass
+
+func step():
+	if target_x != 0:
+		step_x += target_x
+		target_x = 0
+
+	if not can_drop():
 		return false
-		
-	if GameManager.check(step_x, step_y + 1):
-		is_stop = true
-		return false
-	target_y = position.y + size
-	to_target_done = false
-	return not is_stop
-
-
-func step(delta):
-	if to_target_done == true:
-		if not to_target():
-			return false
-
-	if not to_target_done:
-		position.y += delta * speed
-		if position.y >= target_y:
-			position.y = target_y
-			step_y += 1
-			to_target_done = true
-
-	if not to_target_x_done:
-		position.x += delta * x_speed
-		var d = sign(x_speed)
-		var ds = position.x >= target_x if d == 1 else position.x <= target_x
-		if ds:
-			position.x = target_x
-			step_x += d 
-			to_target_x_done = true
-
+	
+	drop()
 	return true
+
+
+func can_drop():
+	var _can_drop = not is_stop\
+		and GameManager.check(step_x, step_y + 1) == null
+	if not _can_drop:
+		is_stop = true
+	return _can_drop
+
+# y分量
+var dy = 0
+func drop():
+	dy += 1
+	if (dy > 1):
+		dy = 0
+		step_y += 1
+	position.y += size / 2
+
+
+func do_rotate(delta, obj):
+	var angle = PI * delta * 2
+	angle = wrapf(angle, -PI, PI)
+	go_rotate(angle, obj.position)
+
+
+func go_rotate(deg, tp):
+	var op = position
+	var nx = (op.x - tp.x) * cos(deg) - (op.y - tp.y) * sin(deg) + tp.x
+	var ny = (op.x - tp.x) * sin(deg) + (op.y - tp.y) * cos(deg) + tp.y
+	position.x = nx 
+	position.y = ny 
 
 
 func is_stopped():
