@@ -42,10 +42,12 @@ func creating():
 	running_block_group.create()
 	state = GameState.PLAYING
 
+
 func destroying():
-	var stoped_blocks = running_block_group.destroying()
+	var stoped_blocks = running_block_group.free_blocks()
 	blocks.append_array(stoped_blocks)
 	state = GameState.CREATING
+
 
 func add_block(x, y):
 	var block = Block.instance()
@@ -53,34 +55,13 @@ func add_block(x, y):
 	add_child(block)
 	blocks.append(block)
 
+
 func playing(delta):
+	if go_dir != 0:
+		running_block_group.move(go_dir)
 	var is_all_stop = running_block_group.step(delta)
 	if is_all_stop:
 		state = GameState.DESTROYING
-
-# func droping(delta):
-# 	var alldone = true
-
-# 	if go_dir != 0:
-# 		for block in running_blocks:
-# 				block.hor_move(go_dir)
-# 	for block in running_blocks:
-# 		if go_dir != 0:
-# 			block.hor_move(go_dir)
-# 		var done = block.step(delta)
-# 		if done == false:
-# 			alldone = false
-
-	if alldone:
-		for block in running_blocks:
-			block.to_target()
-		
-# 	var allstop = true
-# 	for block in running_blocks:
-# 		if not block.is_stopped():
-# 			allstop = false
-# 	if allstop:
-# 		state = GameState.CREATING
 
 
 func _process_input():
@@ -90,14 +71,9 @@ func _process_input():
 	elif Input.is_action_pressed("ui_left"):
 		go_dir = -1
 
-
-# func dis_running_blocks():
-# 	blocks.append_array(running_blocks)
-# 	running_blocks = []
-
 func check(x, y):
 	if x < 0 || x > MAX_X || y < 0 || y > MAX_Y:
-		return false
+		return true
 
 	for block in blocks:
 		if block.step_x == x and block.step_y == y:

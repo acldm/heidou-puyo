@@ -25,12 +25,35 @@ func init(x, y=0):
 	position.x = x * size
 	position.y = y * size
 
+func can_move(dir):
+	if is_stop:
+		return true
+
+	if GameManager.check(step_x + dir, step_y + 1)\
+		or not to_target_x_done:
+		return false
+
+	var x_dist = 1.0 / hor_speed
+	var rest_y_dist = abs(target_y - position.y) / speed
+	if rest_y_dist < x_dist and GameManager.check(step_x + dir, step_y + 2) != null:
+		return false
+	
+	return true
+
+
+func move(dir):
+	if is_stop:
+		return
+	target_x = (step_x + dir) * size
+	to_target_x_done = false
+	x_speed = dir * hor_speed * size
+
+
 func to_target(new_speed = 2):
 	speed = new_speed * size 
 	if is_stop:
 		return false
 		
-	print(step_x, '- -',step_y)
 	if GameManager.check(step_x, step_y + 1):
 		is_stop = true
 		return false
@@ -38,26 +61,11 @@ func to_target(new_speed = 2):
 	to_target_done = false
 	return not is_stop
 
-func hor_move(dir):
-	if not to_target_x_done:
-		return
-
-	var target_step_x = step_x + dir
-	if (target_step_x == GameManager.MAX_X or target_step_x == 0) and GameManager.check(target_step_x, step_y) != null:
-		return
-
-	target_x = target_step_x * size
-	var rest_y_dist = abs(target_y - position.y) / speed
-	var x_dist = abs(target_x - position.x) / hor_speed
-	if rest_y_dist < x_dist and GameManager.check(step_x, step_y + 1) != null:
-		return
-
-	to_target_x_done = false
-	x_speed = dir * hor_speed * size
 
 func step(delta):
 	if to_target_done == true:
-		return true
+		if not to_target():
+			return false
 
 	if not to_target_done:
 		position.y += delta * speed
@@ -75,7 +83,8 @@ func step(delta):
 			step_x += d 
 			to_target_x_done = true
 
-	return false
+	return true
+
 
 func is_stopped():
 	return is_stop
