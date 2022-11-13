@@ -78,19 +78,44 @@ func drop():
 	position.y += size / 2
 
 
-func do_rotate(delta, obj):
-	var angle = PI * delta * 2
-	angle = wrapf(angle, -PI, PI)
-	go_rotate(angle, obj.position)
+var total_radian = 0
+var parent_handle = null
+var rotating = false
 
 
-func go_rotate(deg, tp):
-	var op = position
+func play_rotate(obj, offset):
+	rotating = true
+	parent_handle = obj
+	total_radian = 0
+	step_x += offset.x
+	step_y += offset.y
+	print(step_x)
+	print(step_y)
+
+
+func rotate_step(delta):
+	if not rotating:
+		return
+		 
+	var radian = PI * delta * 4
+	total_radian += radian
+	if total_radian > PI / 2:
+		rotating = false
+		radian = radian -  (total_radian - PI / 2)
+	var offset_pos = around_point_rotate(radian, position, parent_handle.position)
+	position = offset_pos
+
+
+func around_point_rotate(deg, op, tp):
 	var nx = (op.x - tp.x) * cos(deg) - (op.y - tp.y) * sin(deg) + tp.x
 	var ny = (op.x - tp.x) * sin(deg) + (op.y - tp.y) * cos(deg) + tp.y
-	position.x = nx 
-	position.y = ny 
-
+	return Vector2(nx, ny)
 
 func is_stopped():
 	return is_stop
+
+func update_offset(offset):
+		step_x += offset.x
+		step_y += offset.y
+		position.x = step_x * size	
+		position.y = step_y * size	

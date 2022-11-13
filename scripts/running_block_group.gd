@@ -15,8 +15,16 @@ var block_res = null
 var blocks setget ,get_blocks
 var direction = Direction.LEFT
 
+
+class TurnData:
+	var parent_offset: Vector2
+	var can_turn: bool
+	var offset: Vector2
+
+
 func get_blocks():
 	return [left_block, right_block]
+
 
 func _init(_parent, _block_res):
 	parent = _parent
@@ -50,10 +58,59 @@ func get_next_direction():
 
 
 var rotating = false
-func go_rotate(delta):	
-	# var next_direction = (direction + 1 % DIRECTION_LEN)
-	left_block.do_rotate(delta, right_block)
+func go_rotate():	
+	if left_block.rotating:
+		return
 
+	var turn_data = null
+	var next_direction = (direction + 1 % DIRECTION_LEN)
+	if next_direction == Direction.UP:
+		print('to up')
+		turn_data = is_up_turn()
+
+	run_rotate(turn_data)
+
+
+func run_rotate(turn_data):
+	if not turn_data.can_turn:
+		return
+
+	if turn_data.parent_offset:
+		left_block.update_offset(turn_data.parent_offset)
+		right_block.update_offset(turn_data.parent_offset)
+
+	left_block.play_rotate(right_block, turn_data.offset)
+
+
+func is_up_turn():
+	var turn_data = TurnData.new()
+	turn_data.can_turn = GameManager.check(right_block.step_x, right_block.step_y - 1) == null
+	turn_data.offset = Vector2(1, -1)
+	return turn_data
+	
+
+# func is_right_turn():
+# 	var block = GameManager.check(step_x + 1, step_y)
+# 	var turn_data = TurnData.new()
+# 	turn_data.offset = Vector2(1, -1)
+# 	if not block:
+# 		block = check_left_exist()
+# 		if not block:
+# 			turn_data.parent_offset = Vector2(-1, 0)
+# 	turn_data.can_turn = block != null
+# 	return turn_data
+
+
+# func is_down_turn():
+# 	return GameManager.check(step_x, step_y - 1)
+
+
+# func is_left_turn():
+# 	return GameManager.check(step_x, step_y + 1)
+
+
+func check_left_exist():
+	return GameManager.check(right_block.step_x - 1, right_block.step_y)
 
 var run_delta = 0
 func step(delta):
@@ -61,6 +118,8 @@ func step(delta):
 
 	for block in get_blocks():
 		block.uplogic(delta)
+
+	left_block.rotate_step(delta)
 
 	if run_delta < 0.3:
 		return
