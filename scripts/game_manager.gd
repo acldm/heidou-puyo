@@ -4,7 +4,7 @@ signal keydown
 
 const UNIT_SIZE = 32
 const MAX_X = 7
-const MAX_Y = 7
+const MAX_Y = 16
 var Block = preload("res://prefabs//Block.tscn")
 var blocks = []
 var running_block_group = null

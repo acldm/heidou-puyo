@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://sptites/red.tres" type="Texture" id=1]
+[ext_resource path="res://scripts/x_block.gd" type="Script" id=2]
+
+[node name="Sprite" type="Sprite"]
+scale = Vector2( 1.6, 1.6 )
+texture = ExtResource( 1 )
+centered = false
+script = ExtResource( 2 )
