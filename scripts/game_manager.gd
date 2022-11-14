@@ -1,10 +1,10 @@
 extends Node2D
 
-signal move(go_dir)
+signal keydown
 
 const UNIT_SIZE = 32
 const MAX_X = 7
-const MAX_Y = 10
+const MAX_Y = 7
 var Block = preload("res://prefabs//Block.tscn")
 var blocks = []
 var running_block_group = null
@@ -15,14 +15,12 @@ func _process(delta):
 
 
 func _process_input():
-	var go_dir = 0
-	if Input.is_action_pressed("ui_right"):
-		go_dir = 1
-	elif Input.is_action_pressed("ui_left"):
-		go_dir = -1
-
-	if go_dir != 0:
-		emit_signal('move', go_dir)
+	if Input.is_action_just_pressed("ui_right"):
+		emit_signal('keydown', 'right')
+	elif Input.is_action_just_pressed("ui_left"):
+		emit_signal('keydown', 'left')
+	elif Input.is_action_just_pressed("ui_down"):
+		emit_signal('keydown', 'rotate')
 
  
 func check(x, y):

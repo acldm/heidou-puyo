@@ -46,8 +46,6 @@ func move(dir):
 func uplogic(delta):
 	move_cd += delta
 
-func play_rotate_anim():
-	pass
 
 func step():
 	if target_x != 0:
@@ -65,8 +63,11 @@ func can_drop():
 	var _can_drop = not is_stop\
 		and GameManager.check(step_x, step_y + 1) == null
 	if not _can_drop:
-		is_stop = true
+		step_stop()
 	return _can_drop
+
+func step_stop():
+	is_stop = true
 
 # y分量
 var dy = 0
@@ -89,8 +90,6 @@ func play_rotate(obj, offset):
 	total_radian = 0
 	step_x += offset.x
 	step_y += offset.y
-	print(step_x)
-	print(step_y)
 
 
 func rotate_step(delta):
@@ -101,9 +100,17 @@ func rotate_step(delta):
 	total_radian += radian
 	if total_radian > PI / 2:
 		rotating = false
-		radian = radian -  (total_radian - PI / 2)
-	var offset_pos = around_point_rotate(radian, position, parent_handle.position)
-	position = offset_pos
+		resize_step_pos()
+	else:
+		var offset_pos = around_point_rotate(radian, position, parent_handle.position)
+		position = offset_pos
+
+
+func resize_step_pos():
+	position.x = step_x * size
+	position.y = step_y * size
+	if dy > 0:
+		position.y += size / 2
 
 
 func around_point_rotate(deg, op, tp):
@@ -111,8 +118,10 @@ func around_point_rotate(deg, op, tp):
 	var ny = (op.x - tp.x) * sin(deg) + (op.y - tp.y) * cos(deg) + tp.y
 	return Vector2(nx, ny)
 
+
 func is_stopped():
 	return is_stop
+
 
 func update_offset(offset):
 		step_x += offset.x

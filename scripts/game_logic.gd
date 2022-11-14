@@ -16,22 +16,22 @@ var go_dir = 0
 
 func _ready():
 	running_block_group = RunningBlockGroup.new(self, Block)
-	add_block(0, 1)
-	add_block(0, 2)
-	add_block(0, 3)
-	add_block(0, 4)
-	add_block(0, 5)
-	add_block(0, 6)
-	add_block(0, 7)
-	add_block(0, 1)
-	add_block(2, 7)
-	add_block(3, 7)
-	add_block(4, 7)
-	add_block(7, 7)
-	add_block(2, 6)
-	add_block(3, 6)
-	add_block(3, 5)
-	GameManager.connect("move", self, "handle_move")
+	# add_block(0, 1)
+	# add_block(0, 2)
+	# add_block(0, 3)
+	# add_block(0, 4)
+	# add_block(0, 5)
+	# add_block(0, 6)
+	# add_block(0, 7)
+	# add_block(0, 1)
+	# add_block(2, 7)
+	# add_block(3, 7)
+	# add_block(4, 7)
+	# add_block(7, 7)
+	# add_block(2, 6)
+	# add_block(3, 6)
+	# add_block(3, 5)
+	GameManager.connect("keydown", self, "handle_keydown")
 	state = GameState.CREATING
 
 
@@ -56,11 +56,17 @@ func destroying():
 
 
 func playing(delta):
-	if go_dir != 0:
-		running_block_group.move(go_dir)
-	go_dir = 0
-	var is_all_stop = running_block_group.step(delta)
-	if is_all_stop:
+	if keydown == 'left':
+		running_block_group.move(-1)
+	elif keydown == 'right':
+		running_block_group.move(1)
+	elif keydown == 'rotate':
+		running_block_group.go_rotate()
+
+	keydown = ""
+
+	var running = running_block_group.step(delta)
+	if not running:
 		state = GameState.DESTROYING
 
 
@@ -70,6 +76,6 @@ func add_block(x, y):
 	add_child(block)
 	GameManager.append_block(block)
 
-
-func handle_move(dir):
-	go_dir = dir	
+var keydown = ""
+func handle_keydown(key):
+	keydown = key

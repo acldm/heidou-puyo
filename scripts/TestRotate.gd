@@ -9,7 +9,7 @@ func _ready():
 	group = RunningBlockGroup.new(self, Block)
 	group.create_by_pos(3, 3)
 	print ("load", group.blocks)
-	add_block(5, 7)
+	# add_block(5, 7)
 
 
 func _process(delta):
