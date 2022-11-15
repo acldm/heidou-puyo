@@ -5,15 +5,18 @@ enum GameState {
 	PLAYING,
 	DROPING,
 	DESTROYING,
+	ELLIMNATING,
 }
 
 var run_group
+var ellimnate_group
 var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
 func _ready():
 	GameManager.connect("keydown", self, "handle_keydown")
 	GameManager.connect("keypress", self, "handle_keypress")
 	run_group = RunGroup.new(self, XBlock)
+	ellimnate_group = EllimnateGroup.new()
 	state = GameState.CREATING
 
 var key =''
@@ -26,6 +29,8 @@ func _process(delta):
 		playing(delta)
 	elif state == GameState.DESTROYING:
 		destroying()
+	elif state == GameState.ELLIMNATING:
+		ellimnating(delta)
 
 func creating():
 	run_group.create()
@@ -53,8 +58,10 @@ func handle_keypress(key):
 	keypress = key
 
 func destroying():
-	blocks.append_array(run_group.free_group())
-	state = GameState.CREATING
+	ellimnate_group.match(run_group_free_group())
+
+func ellimnating():
+	ellimnate_group.drop()
 
 func check(x, y):
 	if x < 0 || x > GameManager.MAX_X || y < 0 || y > GameManager.MAX_Y:
