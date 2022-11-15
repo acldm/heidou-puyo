@@ -12,12 +12,14 @@ var block_res
 var a_block
 var c_block
 var direction = Direction.LEFT
+const DIRECTION_LEN = 4
 
 func _init(_parent, _block_res):
 	parent = _parent
 	block_res = _block_res
 
 func create():
+	direction = Direction.LEFT
 	a_block = _create_block(Vector2(4, 0))
 	c_block = _create_block(Vector2(5, 0))
 
@@ -27,6 +29,46 @@ func _create_block(pos):
 	parent.add_child(block)
 	return block
 
+var rotate_funcs = ["rotate_left", "rotate_up", "rotate_right", "rotate_down"]
+func go_rotate():
+	if a_block.animating:
+		return
+	var next_direction = (direction + 1) % DIRECTION_LEN
+	var offset = call(rotate_funcs[next_direction])
+	if offset:
+		a_block.play_rotate(offset, c_block)
+		direction = next_direction
+	
+func rotate_up():
+		return Vector2(1, -2)
+
+func rotate_right():
+	var block = is_block_exists(c_block, 1, 0)
+	if block:
+		block = is_block_exists(c_block, -1, 0)
+	if not block:
+		c_block.move(-1, 0)
+		a_block.move(-1, 0)
+	else:
+		return null
+	return Vector2(1, 2) 
+
+func rotate_left():
+	var block = is_block_exists(c_block, -1, 0)
+	if block:
+		block = is_block_exists(c_block, 1, 0)
+	if not block:
+		c_block.move(1, 0)
+		a_block.move(1, 0)
+	else:
+		return null
+	return Vector2(-1, -2) 
+
+func rotate_down():
+	var block = is_block_exists(c_block, 0, 1)
+	if block:
+		return null
+	return Vector2(-1, 2)
 
 var total_time = 0
 func run(delta):
@@ -42,13 +84,13 @@ func move(dir):
 	if not has_group_move(dir):
 		return
 
-	a_block.move(dir)
-	c_block.move(dir)
-	
-func has_group_move(dir):
-	var block = a_block if dir == -1 else c_block
-	return is_block_exists(block.grid_pos.x + dir, block.grid_pos.y) == null	
-	
+	_iter_move(a_block, dir)
+	_iter_move(c_block, dir)
+
+func _iter_move(block, dir):
+	if is_block_exists(block, 0, 1):
+		return
+	block.move(dir)
 
 func step():
 	if has_group_drop_collision():
@@ -59,24 +101,28 @@ func step():
 	return is_a_stop or is_c_stop
 
 func iter_step(block):
-	if is_block_exists(block.grid_pos.x, block.grid_pos.y + 2) == null:
-		block.step()
+	if is_block_exists(block, 0, 1) == null:
+		block.move(0, 1)
 		return true
 	return false
 
+func has_group_move(dir):
+	return is_block_exists(a_block, dir, 0) == null\
+		and is_block_exists(c_block, dir, 0) == null
 
 func has_group_drop_collision():
 	if direction == Direction.UP:
-		is_block_exists(c_block.grid_pos.x, c_block.grid_pos.y) == null
+		return is_block_exists(c_block, 0, 1) != null
+	elif direction == Direction.DOWN:
+		return is_block_exists(a_block, 0, 1) != null
 	return false
 
-func is_block_exists(x, y):
-	return parent.check(x, y)
+func is_block_exists(block, x = 0, y = 0):
+	return parent.check(block.grid_pos.x + x, block.grid_pos.y + y)
 
 func is_block_hor_exists(block):
 	# return parent.check()
 	pass
 	
-
 func free_group():
 	return [a_block, c_block]

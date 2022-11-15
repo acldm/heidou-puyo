@@ -12,6 +12,7 @@ var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
 func _ready():
 	GameManager.connect("keydown", self, "handle_keydown")
+	GameManager.connect("keypress", self, "handle_keypress")
 	run_group = RunGroup.new(self, XBlock)
 	state = GameState.CREATING
 
@@ -30,18 +31,26 @@ func creating():
 	run_group.create()
 	state = GameState.PLAYING
 
+var fastmode = false
 func playing(delta):
 	if key == 'left':
 		run_group.move(-1)
 	elif key == 'right':
 		run_group.move(1)
 	elif key == 'rotate':
-		pass
+		run_group.go_rotate()
+
+	fastmode = keypress == 'speed'
+	keypress = ''
 	key = ""
-	var stop = not run_group.run(delta)
+
+	var stop = not run_group.run(delta * 6 if fastmode else delta)
 	if stop:
 		state = GameState.DESTROYING
 
+var keypress = ''
+func handle_keypress(key):
+	keypress = key
 
 func destroying():
 	blocks.append_array(run_group.free_group())
@@ -53,7 +62,7 @@ func check(x, y):
 
 	for block in blocks:
 		var pos = block.grid_pos
-		if pos.x == x and pos.y == y: 
+		if pos.x == x and abs(pos.y - y) <= 1: 
 			return block
 	return null
 

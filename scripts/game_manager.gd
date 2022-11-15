@@ -1,6 +1,7 @@
 extends Node2D
 
-signal keydown
+signal keydown(key)
+signal keypress(key)
 
 const UNIT_SIZE = 32
 const MAX_X = 7
@@ -21,6 +22,8 @@ func _process_input():
 		emit_signal('keydown', 'left')
 	elif Input.is_action_just_pressed("ui_down"):
 		emit_signal('keydown', 'rotate')
+	elif Input.is_action_pressed("ui_space"):
+		emit_signal('keypress', 'speed')
 
  
 func check(x, y):
