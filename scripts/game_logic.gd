@@ -54,7 +54,6 @@ func destroying():
 	GameManager.append_blocks(stoped_blocks)
 	state = GameState.CREATING
 
-
 func playing(delta):
 	if keydown == 'left':
 		running_block_group.move(-1)

@@ -1,4 +1,5 @@
 var total_delta = 0
+
 func droping(delta):
 	total_delta += delta
 	if total_delta > 0.1:
@@ -13,7 +14,6 @@ func drop_init():
 func drop_step():
 	var has_move = false
 	for block in Map.blocks:
-		print(block)
 		if Map.query_pos(block.x, block.y + 1):
 			has_move = true
 			block.move(0, 1)

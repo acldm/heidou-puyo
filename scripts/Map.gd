@@ -19,11 +19,38 @@ func query_pos(x, y):
 			return block
 	return null
 
-func removes(_blocks):
-	_blocks.sort_custom(self, "_cmp_desc")
-	for b_index in _blocks:
-		blocks[b_index].queue_free()
-		blocks.remove(b_index)
+func removes(_rm_blocks: Array):
+	var indexes = []
+	_rm_blocks.sort_custom(self, 'cmp')
+	blocks.sort_custom(self, 'cmp')
+	var rm_index = 0
+	var index = 0
+	while index < blocks.size():
+		var rm_block = _rm_blocks[rm_index]
+		var block = blocks[index]
+		var cmp_res = cmp(rm_block, block)
+		if rm_block == block:
+			indexes.append(index)
+			index += 1
+			rm_index += 1
+		elif cmp_res and rm_index < _rm_blocks.size() - 1:
+			rm_index += 1
+		else:
+			index += 1
 
-func _cmp_desc(a, b):
-	return a - b > 0
+	for i in range(indexes.size() - 1, 0, -1):
+		blocks[i].queue_free()
+		blocks.pop_at(i)		
+
+func remove(rm_block):
+	var index = blocks.find(rm_block)
+	if index >= 0:
+		blocks[index].queue_free()
+		blocks.remove(index)
+
+func cmp(a, b):
+	var dx = a.grid_pos.x - b.grid_pos.x
+	var dy = 0
+	if dx == 0:
+		dy = a.grid_pos.y - b.grid_pos.y
+	return dx >= 0 and dy >= 0

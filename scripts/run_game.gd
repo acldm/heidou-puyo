@@ -56,7 +56,6 @@ func playing(delta):
 func enter_ellimnate_state(reg_blocks):
 	Map.append_blocks(reg_blocks)
 	ellimnate_group.match(reg_blocks)
-	print(ellimnate_group.results)
 	state = GameState.ELLIMNATING	
 
 var keypress = ''

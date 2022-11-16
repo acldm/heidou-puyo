@@ -20,11 +20,6 @@ _global_script_classes=[ {
 "path": "res://scripts/ellimnate_group.gd"
 }, {
 "base": "Reference",
-"class": "Maps",
-"language": "GDScript",
-"path": "res://scripts/maps.gd"
-}, {
-"base": "Reference",
 "class": "RunGroup",
 "language": "GDScript",
 "path": "res://scripts/run_group.gd"
@@ -33,19 +28,12 @@ _global_script_classes=[ {
 "class": "RunningBlockGroup",
 "language": "GDScript",
 "path": "res://scripts/running_block_group.gd"
-}, {
-"base": "Reference",
-"class": "Types",
-"language": "GDScript",
-"path": "res://scripts/types.gd"
 } ]
 _global_script_class_icons={
 "Block": "",
 "EllimnateGroup": "",
-"Maps": "",
 "RunGroup": "",
-"RunningBlockGroup": "",
-"Types": ""
+"RunningBlockGroup": ""
 }
 
 [application]
@@ -58,13 +46,14 @@ config/icon="res://icon.png"
 
 GameManager="*res://scripts/game_manager.gd"
 Map="*res://scripts/Map.gd"
+Types="*res://scripts/types.gd"
 
 [display]
 
 window/size/width=180
 window/size/height=320
-window/size/test_width=180
-window/size/test_height=320
+window/size/test_width=360
+window/size/test_height=640
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
