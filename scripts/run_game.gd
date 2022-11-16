@@ -8,7 +8,8 @@ enum GameState {
 }
 
 var run_group: RunGroup
-var ellimnate_group
+var ellimnate_group: EllimnateGroup
+var drop_group: DropGroup
 var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
 func _ready():
@@ -16,6 +17,7 @@ func _ready():
 	GameManager.connect("keypress", self, "handle_keypress")
 	run_group = RunGroup.new(self, XBlock)
 	ellimnate_group = EllimnateGroup.new()
+	drop_group = DropGroup.new()
 	state = GameState.CREATING
 
 var key =''
@@ -58,14 +60,14 @@ func enter_ellimnate_state(reg_blocks):
 	ellimnate_group.match(reg_blocks)
 	state = GameState.ELLIMNATING	
 
-var keypress = ''
-func handle_keypress(key):
-	keypress = key
 
 func ellimnating(delta):
 	var es = ellimnate_group.ellimnating(delta)
 	if not es:
-		state = GameState.CREATING
+		state = GameState.DROPPING
+	
+func enter_drop_state():
+	pass
 	
 func dropping (delta):
 	if not ellimnate_group.droping(delta):
@@ -73,3 +75,7 @@ func dropping (delta):
 
 func handle_keydown(keydown):
 	key = keydown 
+
+var keypress = ''
+func handle_keypress(key):
+	keypress = key

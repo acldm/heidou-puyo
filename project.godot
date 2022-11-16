@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://scripts/block.gd"
 }, {
 "base": "Reference",
+"class": "DropGroup",
+"language": "GDScript",
+"path": "res://scripts/drop_group.gd"
+}, {
+"base": "Reference",
 "class": "EllimnateGroup",
 "language": "GDScript",
 "path": "res://scripts/ellimnate_group.gd"
@@ -31,6 +36,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Block": "",
+"DropGroup": "",
 "EllimnateGroup": "",
 "RunGroup": "",
 "RunningBlockGroup": ""

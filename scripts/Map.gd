@@ -25,7 +25,8 @@ func removes(_rm_blocks: Array):
 	blocks.sort_custom(self, 'cmp')
 	var rm_index = 0
 	var index = 0
-	while index < blocks.size():
+	while index < blocks.size() \
+		and rm_index < _rm_blocks.size():
 		var rm_block = _rm_blocks[rm_index]
 		var block = blocks[index]
 		var cmp_res = cmp(rm_block, block)
@@ -33,7 +34,7 @@ func removes(_rm_blocks: Array):
 			indexes.append(index)
 			index += 1
 			rm_index += 1
-		elif cmp_res and rm_index < _rm_blocks.size() - 1:
+		elif cmp_res and rm_index:
 			rm_index += 1
 		else:
 			index += 1

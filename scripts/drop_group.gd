@@ -1,3 +1,5 @@
+class_name DropGroup
+
 var total_delta = 0
 
 func droping(delta):
@@ -6,11 +8,8 @@ func droping(delta):
 		total_delta -= 0.1
 		return drop_step()
 	return true
-	
-var sorted_blocks = []
-func drop_init():
-	sorted_blocks = Map.blocks.duplicate().sort_custom(self, 'sort_blocks_by_yaxis')
 
+var moved_blocks = []
 func drop_step():
 	var has_move = false
 	for block in Map.blocks:
