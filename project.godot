@@ -28,23 +28,30 @@ _global_script_classes=[ {
 "class": "RunningBlockGroup",
 "language": "GDScript",
 "path": "res://scripts/running_block_group.gd"
+}, {
+"base": "Reference",
+"class": "Types",
+"language": "GDScript",
+"path": "res://scripts/types.gd"
 } ]
 _global_script_class_icons={
 "Block": "",
 "EllimnateGroup": "",
 "RunGroup": "",
-"RunningBlockGroup": ""
+"RunningBlockGroup": "",
+"Types": ""
 }
 
 [application]
 
 config/name="Test"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/run_game.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 GameManager="*res://scripts/game_manager.gd"
+Map="*res://scripts/Map.gd"
 
 [display]
 
