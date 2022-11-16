@@ -3,12 +3,11 @@ extends Node2D
 enum GameState {
 	CREATING,
 	PLAYING,
-	DROPING,
-	DESTROYING,
+	DROPPING,
 	ELLIMNATING,
 }
 
-var run_group
+var run_group: RunGroup
 var ellimnate_group
 var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
@@ -27,10 +26,10 @@ func _process(delta):
 		creating()
 	elif state == GameState.PLAYING:
 		playing(delta)
-	elif state == GameState.DESTROYING:
-		destroying()
 	elif state == GameState.ELLIMNATING:
 		ellimnating(delta)
+	elif state == GameState.DROPPING:
+		dropping(delta)
 
 func creating():
 	run_group.create()
@@ -51,27 +50,27 @@ func playing(delta):
 
 	var stop = not run_group.run(delta * 6 if fastmode else delta)
 	if stop:
-		state = GameState.DESTROYING
+		var unlink_blocks = run_group.free_group()
+		enter_ellimnate_state(unlink_blocks)
+
+func enter_ellimnate_state(reg_blocks):
+	Map.append_blocks(reg_blocks)
+	ellimnate_group.match(reg_blocks)
+	print(ellimnate_group.results)
+	state = GameState.ELLIMNATING	
 
 var keypress = ''
 func handle_keypress(key):
 	keypress = key
 
-func destroying():
-	ellimnate_group.match(run_group_free_group())
-
-func ellimnating():
-	ellimnate_group.drop()
-
-func check(x, y):
-	if x < 0 || x > GameManager.MAX_X || y < 0 || y > GameManager.MAX_Y:
-		return true
-
-	for block in blocks:
-		var pos = block.grid_pos
-		if pos.x == x and abs(pos.y - y) <= 1: 
-			return block
-	return null
+func ellimnating(delta):
+	var es = ellimnate_group.ellimnating(delta)
+	if not es:
+		state = GameState.CREATING
+	
+func dropping (delta):
+	if not ellimnate_group.droping(delta):
+		state = GameState.ELLIMNATING
 
 func handle_keydown(keydown):
 	key = keydown 
