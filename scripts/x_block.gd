@@ -57,5 +57,9 @@ func around_point_rotate(deg, op, tp):
 
 var flashing = false
 func flash():
-	flashing = not flashing
+	flashing = !flashing
+#	tween.interpolate_property($Sprite, "modulate.a",
+#        Vector2(0, 0), Vector2(100, 100), 1,
+#        Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#
 	

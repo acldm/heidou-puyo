@@ -118,11 +118,7 @@ func has_group_drop_collision():
 	return false
 
 func is_block_exists(block, x = 0, y = 0):
-	return Map.query_pos(block.grid_pos.x + x, block.grid_pos.y + y)
-
-func is_block_hor_exists(block):
-	# return parent.check()
-	pass
+	return Map.check_adjust(block, x, y)
 	
 func free_group():
 	return [a_block, c_block]

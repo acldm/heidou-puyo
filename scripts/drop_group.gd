@@ -16,7 +16,7 @@ func droping(delta):
 func drop_step():
 	var has_move = false
 	for block in Map.blocks:
-		if not Map.query_pos(block.grid_pos.x, block.grid_pos.y + 1):
+		if not Map.check_adjust(block, 0, 1):
 			has_move = true
 			block.move(0, 1)
 	return has_move

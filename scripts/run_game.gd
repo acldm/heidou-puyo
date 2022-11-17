@@ -13,7 +13,6 @@ var drop_group: DropGroup
 var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
 func _ready():
-	print(Types.MAYCH_COUNT)
 	GameManager.connect("keydown", self, "handle_keydown")
 	GameManager.connect("keypress", self, "handle_keypress")
 	run_group = RunGroup.new(self, XBlock)

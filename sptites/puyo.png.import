@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/blocks.png-885e2863b00ee14ac2f14d487cfd5333.stex"
+path="res://.import/puyo.png-f67bb909224d7fb073b1aaff23bf7802.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sptites/blocks.png"
-dest_files=[ "res://.import/blocks.png-885e2863b00ee14ac2f14d487cfd5333.stex" ]
+source_file="res://sptites/puyo.png"
+dest_files=[ "res://.import/puyo.png-f67bb909224d7fb073b1aaff23bf7802.stex" ]
 
 [params]
 
@@ -31,5 +31,5 @@ process/invert_color=false
 process/normal_map_invert_y=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0

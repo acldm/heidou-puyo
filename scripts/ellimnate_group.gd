@@ -17,14 +17,13 @@ class MatchHandler:
 		return result
 		
 	func _iter_match(node, wait_visitor, ctype, result):
-		var pos = node.grid_pos
-		_add_block_in_visitor_by_pos(pos.x - 1, pos.y, wait_visitor, ctype, result)
-		_add_block_in_visitor_by_pos(pos.x + 1, pos.y, wait_visitor, ctype, result)
-		_add_block_in_visitor_by_pos(pos.x, pos.y + 2, wait_visitor, ctype, result)
-		_add_block_in_visitor_by_pos(pos.x, pos.y - 2, wait_visitor, ctype, result)
+		_add_block_in_visitor_by_pos(node, -1, 0, wait_visitor, ctype, result)
+		_add_block_in_visitor_by_pos(node, 1, 0, wait_visitor, ctype, result)
+		_add_block_in_visitor_by_pos(node, 0, 1, wait_visitor, ctype, result)
+		_add_block_in_visitor_by_pos(node, 0, - 1, wait_visitor, ctype, result)
 
-	func _add_block_in_visitor_by_pos(x, y, wait_visitor, ctype, result):
-		var node = Map.query_pos(x, y)
+	func _add_block_in_visitor_by_pos(_node, x, y, wait_visitor, ctype, result):
+		var node = Map.check_adjust(_node, x, y)
 		if not node or accessed.has(node):
 			return
 
@@ -45,12 +44,12 @@ func match(match_blocks):
 var total_delta = 0
 func ellimnating(delta):
 	total_delta += delta
-	if total_delta > 0.1:
-		total_delta -= 0.1
+	if total_delta > 0.05:
+		total_delta -= 0.05
 		return ellimnate_step()
 	return true
 
-var do_flash_count = 6
+var do_flash_count = 16
 func ellimnate_step():
 	if results.size() == 0:
 		return false
@@ -62,7 +61,7 @@ func ellimnate_step():
 		#for r in results:
 		#	Map.remove(r)
 		Map.removes(results)
-		do_flash_count = 6
+		do_flash_count = 16
 		return false
 	return true
 	

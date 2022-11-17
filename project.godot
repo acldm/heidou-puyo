@@ -51,7 +51,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GameManager="*res://scripts/game_manager.gd"
-Map="*res://scripts/Map.gd"
+Map="*res://scripts/map.gd"
 Types="*res://scripts/types.gd"
 
 [display]

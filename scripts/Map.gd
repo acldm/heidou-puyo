@@ -19,6 +19,10 @@ func query_pos(x, y):
 		if pos.x == x and (dy == 0 or dy == -1): 
 			return block
 	return null
+	
+func check_adjust(block, offset_x, offset_y):
+	offset_y *= 2
+	return query_pos(block.grid_pos.x + offset_x, block.grid_pos.y + offset_y)
 
 func removes(_rm_blocks: Array):
 	var indexes = []
