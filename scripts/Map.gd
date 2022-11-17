@@ -15,7 +15,8 @@ func query_pos(x, y):
 
 	for block in blocks:
 		var pos = block.grid_pos
-		if pos.x == x and abs(pos.y - y) <= 1: 
+		var dy = pos.y - y
+		if pos.x == x and (dy == 0 or dy == -1): 
 			return block
 	return null
 
@@ -34,12 +35,12 @@ func removes(_rm_blocks: Array):
 			indexes.append(index)
 			index += 1
 			rm_index += 1
-		elif cmp_res and rm_index:
+		elif cmp_res:
 			rm_index += 1
 		else:
 			index += 1
-
-	for i in range(indexes.size() - 1, 0, -1):
+			
+	for i in range(indexes.size() - 1, -1, -1):
 		blocks[i].queue_free()
 		blocks.pop_at(i)		
 

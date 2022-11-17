@@ -13,6 +13,7 @@ var drop_group: DropGroup
 var XBlock = preload("res://prefabs/XBlock.tscn")
 var blocks = []
 func _ready():
+	print(Types.MAYCH_COUNT)
 	GameManager.connect("keydown", self, "handle_keydown")
 	GameManager.connect("keypress", self, "handle_keypress")
 	run_group = RunGroup.new(self, XBlock)
@@ -56,22 +57,25 @@ func playing(delta):
 		enter_ellimnate_state(unlink_blocks)
 
 func enter_ellimnate_state(reg_blocks):
-	Map.append_blocks(reg_blocks)
-	ellimnate_group.match(reg_blocks)
-	state = GameState.ELLIMNATING	
-
+	if reg_blocks.size() == 0:
+		state = GameState.CREATING
+	else:
+		Map.append_blocks(reg_blocks)
+		ellimnate_group.match(reg_blocks)
+		state = GameState.ELLIMNATING	
 
 func ellimnating(delta):
 	var es = ellimnate_group.ellimnating(delta)
 	if not es:
-		state = GameState.DROPPING
+		enter_drop_state()
 	
 func enter_drop_state():
-	pass
+	drop_group.drop_ready()
+	state = GameState.DROPPING
 	
 func dropping (delta):
-	if not ellimnate_group.droping(delta):
-		state = GameState.ELLIMNATING
+	if not drop_group.droping(delta):
+		enter_ellimnate_state(drop_group.moved_blocks)
 
 func handle_keydown(keydown):
 	key = keydown 

@@ -6,7 +6,8 @@ var x_size = 24
 var y_size = x_size / 2
 var ctype = 1
 
-func _init():
+func _init(init_ctype = 1):
+	ctype = init_ctype
 	grid_pos = Vector2(-100, -100)
 
 func set_pos(pos: Vector2):
