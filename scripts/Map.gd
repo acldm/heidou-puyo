@@ -1,13 +1,23 @@
 extends Node2D
 var blocks = []
-
+var block_id_index_maps = {}
+var block_index_yaxis_maps = {}
 const EMPTY_BLOCK = {
 	'grid_pos': Vector2(-1, -1),
 	'ctype': -1,
 }
 
-func append_blocks(_blocks):
-	blocks.append_array(_blocks)
+func append_block(_block: Block):
+	var instance_id = _block.get_instance_id()
+	if block_id_index_maps.has(instance_id):
+		return false
+	blocks.append(_block)
+	block_id_index_maps[instance_id] = _block
+	return true
+	
+func append_blocks(blocks):
+	for block in blocks:
+		append_block(block)
 
 func query_pos(x, y):
 	if x < 0 || x > GameManager.MAX_X || y < 0 || y > GameManager.MAX_Y:
@@ -43,10 +53,12 @@ func removes(_rm_blocks: Array):
 			rm_index += 1
 		else:
 			index += 1
-			
+	
+	print(indexes)
 	for i in range(indexes.size() - 1, -1, -1):
-		blocks[i].queue_free()
-		blocks.pop_at(i)		
+		var ri = indexes[i]
+		blocks[ri].queue_free()
+		blocks.pop_at(ri)		
 
 func remove(rm_block):
 	var index = blocks.find(rm_block)

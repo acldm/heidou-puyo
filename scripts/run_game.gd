@@ -10,7 +10,7 @@ enum GameState {
 var run_group: RunGroup
 var ellimnate_group: EllimnateGroup
 var drop_group: DropGroup
-var XBlock = preload("res://prefabs/XBlock.tscn")
+var XBlock = preload("res://prefabs/Block.tscn")
 var blocks = []
 func _ready():
 	GameManager.connect("keydown", self, "handle_keydown")

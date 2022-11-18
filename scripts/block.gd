@@ -1,130 +1,68 @@
 class_name Block
-extends Node2D
 
-signal block_added
+extends Sprite
 
-export var size = 24 
-var target_x = 0
-var target_y = 0
-var step_y = 0
-var step_x = 0
-var is_stop = false
-var is_left = false
+var animating = false
+var grid_pos
+var x_size = 16
+var y_size = x_size / 2
+var ctype = 1
 
-func _ready():
-	emit_signal("block_added", self)
+func _init(init_ctype = 1):
+	ctype = randi() % 4
+	texture = Types.CTYPE_TEXTURES[ctype]
+	grid_pos = Vector2(-100, -100)
 
-func init_pos(x, y=0):
-	step_x = x
-	step_y = y
-	position.x = x * size
-	position.y = y * size
+func set_pos(pos: Vector2):
+	grid_pos = pos
 
-func can_move(dir):
-	if is_stop:
-		return true
+func move(offset_x, offset_y = 0):
+	grid_pos.x += offset_x
+	grid_pos.y += offset_y
 
-	var check_y = step_y + dy 
-	if move_cd < MoveCD\
-		or GameManager.check(step_x + dir, check_y) != null:
-		return false
-
-	return true
-
-
-const MoveCD = 0.1
-var move_cd = 0
-func move(dir):
-	move_cd = 0
-
-	if is_stop:
-		return
-
-	position.x += dir * size
-	step_x += dir
-
-func uplogic(delta):
-	move_cd += delta
-
-
-func step():
-	if target_x != 0:
-		step_x += target_x
-		target_x = 0
-
-	if not can_drop():
-		return false
-	
-	drop()
-	return true
-
-
-func can_drop():
-	var _can_drop = not is_stop\
-		and GameManager.check(step_x, step_y + 1) == null
-	if not _can_drop:
-		step_stop()
-	return _can_drop
-
-func step_stop():
-	is_stop = true
-
-# y分量
-var dy = 0
-func drop():
-	dy += 1
-	if (dy > 1):
-		dy = 0
-		step_y += 1
-	position.y += size / 2
-
-
-var total_radian = 0
-var parent_handle = null
-var rotating = false
-
-
-func play_rotate(obj, offset):
-	rotating = true
-	parent_handle = obj
-	total_radian = 0
-	step_x += offset.x
-	step_y += offset.y
-
-
-func rotate_step(delta):
-	if not rotating:
-		return
-		 
-	var radian = PI * delta * 4
-	total_radian += radian
-	if total_radian > PI / 2:
-		rotating = false
-		resize_step_pos()
+func _process(delta):
+	modulate.a = 0.2 if flashing else 1
+		
+	if animating:
+		animate_step(delta)
 	else:
-		var offset_pos = around_point_rotate(radian, position, parent_handle.position)
-		position = offset_pos
+		position = render_pos()
+	
+func render_pos():
+	return get_pos_by_grid(grid_pos)
 
+func get_pos_by_grid(grid_pos):
+	return Vector2(
+		grid_pos.x * x_size,
+		grid_pos.y * y_size
+	)
 
-func resize_step_pos():
-	position.x = step_x * size
-	position.y = step_y * size
-	if dy > 0:
-		position.y += size / 2
+var anim_offset_pos:Vector2
+var deg = 0
+var center = null
+func play_rotate(offset, center_obj):
+	grid_pos += offset
+	deg = 0
+	animating = true
+	center = center_obj
+	anim_offset_pos = offset
 
+func animate_step(delta):
+	deg += PI * delta * 3
+	if deg > PI / 2:
+		animating = false
+	position = around_point_rotate(deg, get_pos_by_grid(grid_pos - anim_offset_pos), center.render_pos())
 
 func around_point_rotate(deg, op, tp):
 	var nx = (op.x - tp.x) * cos(deg) - (op.y - tp.y) * sin(deg) + tp.x
 	var ny = (op.x - tp.x) * sin(deg) + (op.y - tp.y) * cos(deg) + tp.y
 	return Vector2(nx, ny)
 
-
-func is_stopped():
-	return is_stop
-
-
-func update_offset(offset):
-		step_x += offset.x
-		step_y += offset.y
-		position.x = step_x * size	
-		position.y = step_y * size	
+var flashing = false
+func flash():
+	flashing = !flashing
+#	tween.interpolate_property($Sprite, "modulate.a",
+#        Vector2(0, 0), Vector2(100, 100), 1,
+#        Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#
+	

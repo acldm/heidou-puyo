@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node2D",
+"base": "Sprite",
 "class": "Block",
 "language": "GDScript",
 "path": "res://scripts/block.gd"
@@ -28,18 +28,12 @@ _global_script_classes=[ {
 "class": "RunGroup",
 "language": "GDScript",
 "path": "res://scripts/run_group.gd"
-}, {
-"base": "Reference",
-"class": "RunningBlockGroup",
-"language": "GDScript",
-"path": "res://scripts/running_block_group.gd"
 } ]
 _global_script_class_icons={
 "Block": "",
 "DropGroup": "",
 "EllimnateGroup": "",
-"RunGroup": "",
-"RunningBlockGroup": ""
+"RunGroup": ""
 }
 
 [application]
